@@ -1,0 +1,30 @@
+Id:
+  in: path
+  name: id
+  required: true
+  schema: { type: integer }
+  example: 1
+
+Page:
+  in: query
+  name: page
+  description: "Page number"
+  required: false
+  schema: { $ref: "openapi.yaml#/components/schemas/Page" }
+  example: 1
+
+Limit:
+  in: query
+  name: limit
+  description: "Number of items per page"
+  required: false
+  schema: { $ref: "openapi.yaml#/components/schemas/Limit" }
+  example: 20
+
+UsePage:
+  in: query
+  name: usePage
+  description: "default=false"
+  required: false
+  schema: { type: boolean }
+  example: true

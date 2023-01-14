@@ -1,0 +1,28 @@
+get:
+  summary: "Health check"
+  description: |
+    # Overview
+    ## Request Header
+    | Key | Value |
+    | :---- | :---- |
+    | Content-Type | application/json |
+    ## Response Body
+    | Name ||| Type | Size | Required | Description |
+    | :---- | :---- | :---- | :---- | :---- | :---- | :---- |
+    | result ||| string | 25 | Required ||
+  tags: ["health-check"]
+  deprecated: false
+  responses:
+    "200":
+      description: "OK"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              result:
+                type: string
+                example: "ok"
+    "default":
+      $ref: "openapi.yaml#/components/responses/default"
+  security: []

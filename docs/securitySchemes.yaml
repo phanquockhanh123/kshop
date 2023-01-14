@@ -1,0 +1,4 @@
+bearer_auth:
+  description: "Bearer authentication"
+  type: http
+  scheme: bearer
