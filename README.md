@@ -1,4 +1,4 @@
-# monstar-gate-api
+# hospital-management
 ## Enviroment
 ### Build docker
 - `docker-compose build`

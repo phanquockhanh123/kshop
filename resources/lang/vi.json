@@ -1,0 +1,6 @@
+{
+    "The :attribute must contain at least one letter.": "Trường :attribute phải chứa ít nhất một chữ cái.",
+    "The :attribute must contain at least one uppercase and one lowercase letter.": "Trường :attribute phải chứa ít nhất một chữ cái viết hoa và một chữ cái viết thường.",
+    "The :attribute must contain at least one number.": "Trường :attribute phải chứa ít nhất một chữ số.",
+    "The :attribute must contain at least one symbol.": "Trường :attribute phải chứa ít nhất một kí tự đặc biệt."
+}

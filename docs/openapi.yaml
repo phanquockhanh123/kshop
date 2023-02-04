@@ -5,7 +5,7 @@ info:
   description: |
     | Environment | URL |
     | :---- | :---- |
-    | Local | http://localhost:8010/api/v1 |
+    | Local | http://:8010/api/v1 |
     | Develop | https://dev-api.monstargate.com/api/v1 |
   version: "1.0.0"
 
