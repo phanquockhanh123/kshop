@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Admin;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,10 +31,14 @@ return [
     'application_cv_file_extension' => ['png, jpeg'],
     'retry_time' => 3,
     'auth' => [
-        'high' => 'auth.role:' . Admin::ROLE_ADMIN_ROOT,
-        'medium' => 'auth.role:' . Admin::ROLE_ADMIN_DOCTOR,
-        'mid' => 'auth.role:' . Admin::ROLE_ADMIN_NURSE,
-        'low' => 'auth.role:' . Admin::ROLE_MEMBER,
+        '7' => 'auth.role:' . User::ROLE_ADMIN_ROOT,
+        '6' => 'auth.role:' . User::ROLE_DOCTOR,
+        '5' => 'auth.role:' . User::ROLE_NURSE,
+        '4' => 'auth.role:' . User::ROLE_PHARMACIST,
+        '3' => 'auth.role:' . User::ROLE_RECEPTIONIST,
+        '2' => 'auth.role:' . User::ROLE_CASE_HANDLER,
+        '1' => 'auth.role:' . User::ROLE_PATIENT,
+        '0' => 'auth.role:' . User::ROLE_MEMBER,
     ],
     'presigned_get_lifetime' => '7 day',
     'default_password' => 'Aa@123456',

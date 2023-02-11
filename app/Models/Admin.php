@@ -11,18 +11,7 @@ class Admin extends BaseModel implements Authenticatable
     use HasApiTokens;
     use AuthenticatableContract;
 
-    // role
-    public const ROLE_MEMBER = 0;
-    public const ROLE_ADMIN_NURSE = 1;
-    public const ROLE_ADMIN_DOCTOR = 2;
-    public const ROLE_ADMIN_ROOT = 3;
-
-    public static $roles = [
-        self::ROLE_MEMBER => 'Member',
-        self::ROLE_ADMIN_NURSE => 'Admin nurse',
-        self::ROLE_ADMIN_DOCTOR => 'Admin doctor',
-        self::ROLE_ADMIN_ROOT => 'Admin root',
-    ];
+    
 
     // gender
     public const GENDER_MALE = 0;
@@ -57,7 +46,6 @@ class Admin extends BaseModel implements Authenticatable
         'email_address',
         'telephone',
         'password',
-        'role',
         'status',
         'first_login_flag',
         'refresh_token',
