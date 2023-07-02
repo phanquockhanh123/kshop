@@ -1,4 +1,4 @@
-# hospital-management
+# k-shop
 ## Enviroment
 ### Build docker
 - `docker-compose build`
