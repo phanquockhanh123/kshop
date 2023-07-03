@@ -23,7 +23,7 @@ services:
     volumes:
       - ./docker/db/sql:/docker-entrypoint-initdb.d
     ports:
-      - 3308:3306
+      - 3307:3306
     user: mysql
 
   php:
