@@ -20,6 +20,15 @@ class AppServiceProvider extends ServiceProvider
                 sprintf('App\\Services\\%s', $serviceName)
             );
         }
+
+        // foreach (glob(app_path('Repositories/*Contract.php')) as $service) {
+        //     $serviceName = explode('Contract.php', basename($service))[0];
+        //     $this->app->bind(
+        //         sprintf('App\\Repositories\\%sContract', $serviceName),
+        //         sprintf('App\\Repositories\\%sRepository', $serviceName)
+        //     );
+        // }
+        
     }
 
     /**
