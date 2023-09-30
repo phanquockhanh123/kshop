@@ -16,8 +16,12 @@ class DatabaseSeeder extends Seeder
     {
         // truncate tables
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-
+        \App\Models\Color::truncate();
+        \App\Models\Size::truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-
+        $this->call([
+            ColorSeeder::class,
+            SizeSeeder::class,
+        ]);
     }
 }
