@@ -22,6 +22,9 @@ Route::prefix('admin')->group(function () {
     Route::post('/categories', [Admin\CategoryController::class, 'create'])->name('admin.create-category');
     Route::patch('/categories/{id}', [Admin\CategoryController::class, 'update'])->name('admin.update-category');
     Route::delete('/categories', [Admin\CategoryController::class, 'delete'])->name('admin.delete-categories');
+
+    // delete a category
+    Route::delete('/categories/{id}', [Admin\CategoryController::class, 'deleteCategory'])->name('admin.delete-category');
 });
 
 

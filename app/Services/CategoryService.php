@@ -2,10 +2,11 @@
 
 namespace App\Services;
 
-use App\Models\Category;
+use Carbon\Carbon;
 
-use App\Http\Resources\CategoryResource;
+use App\Models\Category;
 use App\Repositories\CategoryContract;
+use App\Http\Resources\CategoryResource;
 use App\Repositories\CategoryRepository;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -30,8 +31,7 @@ class CategoryService implements CategoryServiceInterface
      */
     public function getAllCategories()
     {
-        $categories = $this->categoryRepository->getAllWithoutGlobalScope();
-
+        $categories = $this->categoryRepository->getAll();
         return [Response::HTTP_OK, $categories];
     }
 
@@ -91,6 +91,31 @@ class CategoryService implements CategoryServiceInterface
     public function detailCategory($id)
     {
         $category = $this->categoryRepository->detail($id);
-        dd($category);
+
+        return [Response::HTTP_OK, $category];
+    }
+
+    /**
+     * delete category
+     * @param  $id
+     * @return array
+     */
+    public function deleteCategory($id)
+    {
+        try {
+            $category = Category::where('id', $id);
+            if($category->first()) {
+                $category->delete();
+            } else {
+                return [Response::HTTP_BAD_REQUEST, [
+                    'message' => 'Dont find this category'
+                ]];
+            }
+
+        } catch (\Exception $e) {
+            return [Response::HTTP_INTERNAL_SERVER_ERROR, $e];
+        }
+
+        return [Response::HTTP_OK, []];
     }
 }

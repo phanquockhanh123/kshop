@@ -15,10 +15,10 @@ class CategoryRepository extends BaseRepository
         $this->model = $model;
     }
 
-    public function getAllWithoutGlobalScope() {
-        return $this->model->withoutGlobalScopes()->get();
+    public function getAll() {
+        return $this->model->get();
     }
- 
+
     /**
      *  @param array $data
      *

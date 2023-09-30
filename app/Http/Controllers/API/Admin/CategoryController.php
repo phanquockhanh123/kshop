@@ -77,16 +77,29 @@ class CategoryController extends BaseController
     }
 
     /**
-     * delete category
+     * delete categories
      * @param  DeleteCategoryRequest $request
-     * @param  int $id
      *
      * @return json
      */
     public function delete(DeleteCategoryRequest $request)
     {
-        
+
         list($statusCode, $data) = $this->categoryService->deleteCategories($request->all());
+
+        return $this->response($data, $statusCode);
+    }
+
+    /**
+     * delete category
+     * @param  int $id
+     *
+     * @return json
+     */
+    public function deleteCategory($id)
+    {
+
+        list($statusCode, $data) = $this->categoryService->deleteCategory($id);
 
         return $this->response($data, $statusCode);
     }

@@ -23,11 +23,4 @@ class Category extends BaseModel
         'updated_at',
         'deleted_at',
     ];
-
-    // protected static function booted()
-    // {
-    //     static::addGlobalScope('categories', function ($builder) {
-    //         return $builder->where('id', '=', 1);
-    //     });
-    // }
 }
