@@ -15,8 +15,8 @@ class CreateDiscountsTable extends Migration
     {
         Schema::create('discounts', function (Blueprint $table) {
             $table->id();
-            $table->string('discount_code');
-            $table->string('discount_type');
+            $table->string('discount_code')->unique();
+            $table->enum('discount_type', ['%', 'VND', 'USD']);
             $table->float('discount_value');
             $table->date('start_date');
             $table->date('end_date');

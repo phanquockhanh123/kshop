@@ -27,6 +27,16 @@ Route::prefix('admin')->group(function () {
     Route::delete('/categories/{id}', [Admin\CategoryController::class, 'deleteCategory'])->name('admin.delete-category');
 });
 
+Route::prefix('admin')->group(function () {
+    Route::get('/discounts', [Admin\DiscountController::class, 'index'])->name('admin.list-discounts');
+    Route::get('/discounts/{id}', [Admin\DiscountController::class, 'detail'])->name('admin.detail-discounts');
+    Route::delete('/discounts/{id}', [Admin\DiscountController::class, 'deleteDiscount'])->name('admin.delete-discount');
+    Route::post('/discounts', [Admin\DiscountController::class, 'create'])->name('admin.create-discounts');
+    Route::patch('/discounts/{id}', [Admin\DiscountController::class, 'update'])->name('admin.update-discounts');
+});
+
+
+
 
 
 
