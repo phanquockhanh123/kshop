@@ -16,8 +16,8 @@ class CreateCampaignsTable extends Migration
         Schema::create('campaigns', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('thumb');
-            $table->string('filepath');
+            $table->string('filepath')->nullable();
+            $table->string('photo_name')->nullable();
             $table->date('start_date');
             $table->date('end_date');
             $table->boolean('status')->default(true);

@@ -35,6 +35,14 @@ Route::prefix('admin')->group(function () {
     Route::patch('/discounts/{id}', [Admin\DiscountController::class, 'update'])->name('admin.update-discounts');
 });
 
+Route::prefix('admin')->group(function () {
+    Route::get('/campaigns', [Admin\CampaignController::class, 'index'])->name('admin.list-campaigns');
+    Route::get('/campaigns/{id}', [Admin\CampaignController::class, 'detail'])->name('admin.detail-campaigns');
+    Route::delete('/campaigns/{id}', [Admin\CampaignController::class, 'deleteCampaign'])->name('admin.delete-campaigns');
+    Route::post('/campaigns', [Admin\CampaignController::class, 'create'])->name('admin.create-campaigns');
+    Route::patch('/campaigns/{id}', [Admin\CampaignController::class, 'update'])->name('admin.update-campaigns');
+});
+
 
 
 

@@ -4,10 +4,24 @@ namespace App\Models;
 
 class Campaign extends BaseModel
 {
+    // status
+    public const STATUS_ACTIVE = 1;
+    public const STATUS_DISACTIVE = 0;
+
+    public static $statuses = [
+        self::STATUS_ACTIVE => 'Đang hoạt động',
+        self::STATUS_DISACTIVE => 'Không hoạt động'
+    ];
+
+    // discount type
+    public const DISCOUNT_TYPE_PERCENT = '%';
+    public const DISCOUNT_TYPE_VND = 'VND';
+    public const DISCOUNT_TYPE_USD = 'USD';
+
     protected $fillable = [
         'name',
-        'thumb',
         'filepath',
+        'photo_name',
         'start_date',
         'end_date',
         'status',
