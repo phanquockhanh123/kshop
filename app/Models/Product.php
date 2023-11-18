@@ -11,6 +11,7 @@ class Product extends BaseModel
         'name',
         'price',
         'filepath',
+        'photo_name',
         'description',
         'status',
         'priority',

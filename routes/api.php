@@ -43,6 +43,14 @@ Route::prefix('admin')->group(function () {
     Route::patch('/campaigns/{id}', [Admin\CampaignController::class, 'update'])->name('admin.update-campaigns');
 });
 
+Route::prefix('admin')->group(function () {
+    Route::get('/products', [Admin\ProductController::class, 'index'])->name('admin.list-products');
+    Route::get('/products/{id}', [Admin\ProductController::class, 'detail'])->name('admin.detail-products');
+    Route::post('/products', [Admin\ProductController::class, 'create'])->name('admin.create-products');
+    Route::patch('/products/{id}', [Admin\ProductController::class, 'update'])->name('admin.update-products');
+    Route::delete('/products/{id}', [Admin\ProductController::class, 'deleteProduct'])->name('admin.delete-products');
+});
+
 
 
 

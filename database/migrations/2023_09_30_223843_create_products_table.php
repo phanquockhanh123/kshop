@@ -21,6 +21,7 @@ class CreateProductsTable extends Migration
             $table->string('name');
             $table->double('price');
             $table->string('filepath')->nullable();
+            $table->string('photo_name')->nullable();
             $table->text('description')->nullable();
             $table->boolean('status')->default(true);
             $table->integer('priority')->default(0);
