@@ -1,5 +1,7 @@
 FROM php:8.1-fpm-buster
 
+USER root:root
+
 # env(setup composer)
 ENV COMPOSER_ALLOW_SUPERUSER 1
 ENV COMPOSER_HOME /composer

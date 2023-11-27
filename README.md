@@ -18,3 +18,5 @@
 - http://localhost:8010/clockwork/app
 ### Check coding convention
 - `./vendor/bin/phpcs --ignore=./vendor/,./storage,./resources,./bootstrap,./database,./public,./config,./docs --standard=PSR12 --extensions=php ./`
+
+docker-compose exec -u 0 php chmod 777 -R storage/
