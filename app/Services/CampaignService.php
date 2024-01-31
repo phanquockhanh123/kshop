@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Exception;
 use App\Models\Campaign;
+use App\Jobs\DelayCreateCampainJob;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use App\Repositories\CampaignRepository;
@@ -62,7 +63,7 @@ class CampaignService implements CampaignServiceInterface
         } catch (\Exception $e) {
             return [Response::HTTP_INTERNAL_SERVER_ERROR, ['message' => $e]];
         }
-        
+
     }
 
     public function createCampaign($data) {
@@ -87,6 +88,7 @@ class CampaignService implements CampaignServiceInterface
         }
 
         try {
+            DelayCreateCampainJob::dispatch()->delay(now()->addMinutes(1));
             $this->campaignRepository->create($data);
             return [Response::HTTP_OK, ['message' => 'Create campaign successful!']];
         } catch (\Exception $e) {

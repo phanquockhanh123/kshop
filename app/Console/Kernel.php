@@ -2,6 +2,9 @@
 
 namespace App\Console;
 
+use App\Models\Campaign;
+use Carbon\Carbon;
+use App\Models\Product;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -15,7 +18,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        \Log::info("luu log");
+        $schedule->command('test:delay-create')->everyMinute();
     }
 
     /**
