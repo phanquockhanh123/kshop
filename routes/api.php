@@ -14,37 +14,42 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/health-check', [API\HealthCheckController::class, 'index'])->name('health_check');
-
 Route::prefix('admin')->group(function () {
     Route::get('/categories', [Admin\CategoryController::class, 'index'])->name('admin.index-categories');
-    Route::get('/categories/{id}', [Admin\CategoryController::class, 'detail'])->name('admin.detail-category');
+    Route::get('/categories/{id}', [Admin\CategoryController::class, 'detail'])->where('id', '[0-9]+')->name('admin.detail-category');
     Route::post('/categories', [Admin\CategoryController::class, 'create'])->name('admin.create-category');
-    Route::patch('/categories/{id}', [Admin\CategoryController::class, 'update'])->name('admin.update-category');
-    Route::delete('/categories', [Admin\CategoryController::class, 'delete'])->name('admin.delete-categories');
+    Route::post('/categories/{id}', [Admin\CategoryController::class, 'update'])->where('id', '[0-9]+')->name('admin.update-category');
+    Route::delete('/categories/{id}', [Admin\CategoryController::class, 'delete'])->where('id', '[0-9]+')->name('admin.delete-category');
+});
 
-    // delete a category
-    Route::delete('/categories/{id}', [Admin\CategoryController::class, 'deleteCategory'])->name('admin.delete-category');
+Route::prefix('admin')->group(function () {
+    Route::get('/sizes', [Admin\SizeController::class, 'index'])->name('admin.index-sizes');
+    Route::get('/sizes/{id}', [Admin\SizeController::class, 'detail'])->where('id', '[0-9]+')->name('admin.detail-size');
+    Route::post('/sizes', [Admin\SizeController::class, 'create'])->name('admin.create-size');
+    Route::patch('/sizes/{id}', [Admin\SizeController::class, 'update'])->where('id', '[0-9]+')->name('admin.update-size');
+    Route::delete('/sizes/{id}', [Admin\SizeController::class, 'delete'])->where('id', '[0-9]+')->name('admin.delete-size');
+});
+
+Route::prefix('admin')->group(function () {
+    Route::get('/colors', [Admin\ColorController::class, 'index'])->name('admin.index-colors');
+    Route::get('/colors/{id}', [Admin\ColorController::class, 'detail'])->where('id', '[0-9]+')->name('admin.detail-color');
+    Route::post('/colors', [Admin\ColorController::class, 'create'])->name('admin.create-color');
+    Route::patch('/colors/{id}', [Admin\ColorController::class, 'update'])->where('id', '[0-9]+')->name('admin.update-color');
+    Route::delete('/colors/{id}', [Admin\ColorController::class, 'delete'])->where('id', '[0-9]+')->name('admin.delete-color');
 });
 
 Route::prefix('admin')->group(function () {
     Route::get('/discounts', [Admin\DiscountController::class, 'index'])->name('admin.list-discounts');
-    Route::get('/discounts/{id}', [Admin\DiscountController::class, 'detail'])->name('admin.detail-discounts');
-    Route::delete('/discounts/{id}', [Admin\DiscountController::class, 'deleteDiscount'])->name('admin.delete-discount');
+    Route::get('/discounts/{id}', [Admin\DiscountController::class, 'detail'])->where('id', '[0-9]+')->name('admin.detail-discounts');
+    Route::delete('/discounts/{id}', [Admin\DiscountController::class, 'deleteDiscount'])->where('id', '[0-9]+')->name('admin.delete-discount');
     Route::post('/discounts', [Admin\DiscountController::class, 'create'])->name('admin.create-discounts');
-    Route::patch('/discounts/{id}', [Admin\DiscountController::class, 'update'])->name('admin.update-discounts');
+    Route::patch('/discounts/{id}', [Admin\DiscountController::class, 'update'])->where('id', '[0-9]+')->name('admin.update-discounts');
 });
 
 Route::prefix('admin')->group(function () {
     Route::get('/campaigns', [Admin\CampaignController::class, 'index'])->name('admin.list-campaigns');
-    Route::get('/campaigns/{id}', [Admin\CampaignController::class, 'detail'])->name('admin.detail-campaigns');
-    Route::delete('/campaigns/{id}', [Admin\CampaignController::class, 'deleteCampaign'])->name('admin.delete-campaigns');
+    Route::get('/campaigns/{id}', [Admin\CampaignController::class, 'detail'])->where('id', '[0-9]+')->name('admin.detail-campaigns');
+    Route::delete('/campaigns/{id}', [Admin\CampaignController::class, 'deleteCampaign'])->where('id', '[0-9]+')->name('admin.delete-campaigns');
     Route::post('/campaigns', [Admin\CampaignController::class, 'create'])->name('admin.create-campaigns');
-    Route::patch('/campaigns/{id}', [Admin\CampaignController::class, 'update'])->name('admin.update-campaigns');
+    Route::patch('/campaigns/{id}', [Admin\CampaignController::class, 'update'])->where('id', '[0-9]+')->name('admin.update-campaigns');
 });
-
-
-
-
-
-

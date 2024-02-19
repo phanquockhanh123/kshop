@@ -3,24 +3,23 @@
 namespace App\Http\Controllers\API\Admin;
 
 use Illuminate\Http\Request;
-use App\Services\CategoryServiceInterface;
+use App\Services\SizeServiceInterface;
+use App\Http\Requests\CreateSizeRequest;
+use App\Http\Requests\UpdateSizeRequest;
 use App\Http\Controllers\API\BaseController;
-use App\Http\Requests\CreateCategoryRequest;
-use App\Http\Requests\DeleteCategoryRequest;
-use App\Http\Requests\UpdateCategoryRequest;
 
-class CategoryController extends BaseController
+class SizeController extends BaseController
 {
-    protected $categoryService;
+    protected $sizeService;
 
     /**
      * create a new instance
      *
-     * @param CategoryServiceInterface $categoryService
+     * @param SizeServiceInterface $sizeService
      */
-    public function __construct(CategoryServiceInterface $categoryService)
+    public function __construct(SizeServiceInterface $sizeService)
     {
-        $this->categoryService = $categoryService;
+        $this->sizeService = $sizeService;
     }
 
     /**
@@ -47,56 +46,55 @@ class CategoryController extends BaseController
             'sort_fields' => $params['sort_fields'] ?? null,
             'sort_order' => $params['sort_order'] ?? 'ASC',
         ];
-        list($statusCode, $data) = $this->categoryService->getAllCategories($filter, $paginate);
+        list($statusCode, $data) = $this->sizeService->getAllSizes($filter, $paginate);
 
         return $this->response($data, $statusCode);
     }
 
     /**
-     * detail category
+     * detail Size
      * @param  int $id
      *
      * @return json
      */
     public function detail(int $id)
     {
-        list($statusCode, $data) = $this->categoryService->detailCategory($id);
+        list($statusCode, $data) = $this->sizeService->detailSize($id);
 
         return $this->response($data, $statusCode);
     }
 
     /**
-     * create category
-     * @param  CreateCategoryRequest $request
+     * create Size
+     * @param  CreateSizeRequest $request
      *
      * @return json
      */
-    public function create(CreateCategoryRequest $request)
+    public function create(CreateSizeRequest $request)
     {
-        list($statusCode, $data) = $this->categoryService->createCategory($request->all());
+        list($statusCode, $data) = $this->sizeService->createSize($request->all());
 
         return $this->response($data, $statusCode);
     }
 
     /**
-     * update category
-     * @param  UpdateCategoryRequest $request
+     * update Size
+     * @param  UpdateSizeRequest $request
      * @param  int $id
      *
      * @return json
      */
-    public function update(UpdateCategoryRequest $request, int $id)
+    public function update(UpdateSizeRequest $request, int $id)
     {
         $data = $request->all();
         $data['id'] = $id;
-        $data['_method'] = 'patch';
-        list($statusCode, $data) = $this->categoryService->updateCategory($data);
+        list($statusCode, $data) = $this->sizeService->updateSize($data);
 
         return $this->response($data, $statusCode);
     }
 
     /**
-     * delete category
+     * delete Size
      * @param  int $id
      *
      * @return json
@@ -104,7 +102,7 @@ class CategoryController extends BaseController
     public function delete($id)
     {
 
-        list($statusCode, $data) = $this->categoryService->deleteCategory($id);
+        list($statusCode, $data) = $this->sizeService->deleteSize($id);
 
         return $this->response($data, $statusCode);
     }

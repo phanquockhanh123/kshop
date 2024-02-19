@@ -4,24 +4,23 @@ namespace App\Services;
 
 use Carbon\Carbon;
 
+use App\Models\Size;
 use App\Models\Category;
-use App\Repositories\CategoryContract;
+use App\Http\Resources\SizeResource;
 use App\Http\Resources\CategoryResource;
-use App\Repositories\CategoryRepository;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CategoryService implements CategoryServiceInterface
+class SizeService implements SizeServiceInterface
 {
 
     /**
-     * getAllCategories function
+     * getAllSizes function
      *
      * @return array
      */
-    public function getAllCategories(array $filter, array $paginate,)
+    public function getAllSizes(array $filter, array $paginate,)
     {
-        $query = Category::query();
+        $query = Size::query();
 
         if (!empty($filter['query'])) {
             $query = $query->whereRaw($filter['query']);
@@ -38,24 +37,16 @@ class CategoryService implements CategoryServiceInterface
     }
 
     /**
-     * create category
+     * create size
      * @param  $data
      * @return array
      */
-    public function createCategory($data)
+    public function createSize($data)
     {
-        $dataSave = $data;
-
-        if (!empty($data['image'])) {
-            $image = uploadImage($data['image'], '/img/categories');
-           
-            $dataSave['image'] = $image;
-        }
-
         try {
-            $dataSave['status'] = Category::STATUS_ACTIVE;
-            Category::create($dataSave);
-            return [Response::HTTP_OK, ['message' => 'Category created successfully.']];
+            $data['status'] = Size::STATUS_ACTIVE;
+            Size::create($data);
+            return [Response::HTTP_OK, ['message' => 'Size created successfully.']];
         } catch (\Exception $e) {
             return [Response::HTTP_INTERNAL_SERVER_ERROR, $e];
         }
@@ -64,25 +55,17 @@ class CategoryService implements CategoryServiceInterface
     }
 
     /**
-     * update category
+     * update size
      * @param  $data
      * @return array
      */
-    public function updateCategory($data)
+    public function updateSize($data)
     {
-        $category = Category::findOrFail($data['id']);
-        $dataSave = $data;
-
-        if (!empty($data['image'])) {
-            deleteImageLocalStorage($category->image);
-            $image = uploadImage($data['image'], '/img/categories');
-           
-            $dataSave['image'] = $image;
-        }
+        $size = Size::findOrFail($data['id']);
 
         try {
-            $category->update($dataSave);
-            return [Response::HTTP_OK, ['message' => 'Category updated successfully.']];
+            $size->update($data);
+            return [Response::HTTP_OK, ['message' => 'Size updated successfully.']];
         } catch (\Exception $e) {
             return [Response::HTTP_INTERNAL_SERVER_ERROR, $e];
         }
@@ -91,28 +74,28 @@ class CategoryService implements CategoryServiceInterface
     }
 
     /**
-     * detail category
+     * detail size
      * @param int $id
      * @return array
      */
-    public function detailCategory($id)
+    public function detailSize($id)
     {
-        $category = Category::findOrFail($id);
-        $data = (new CategoryResource($category))->toArray();
+        $size = Size::findOrFail($id);
+        $data = (new SizeResource($size))->toArray();
         return [Response::HTTP_OK, $data];
     }
 
     /**
-     * delete category
+     * delete size
      * @param  $id
      * @return array
      */
-    public function deleteCategory($id)
+    public function deleteSize($id)
     {
         try {
-            $category = Category::find($id);
-            if ($category) {
-                $category->delete();
+            $size = Size::find($id);
+            if ($size) {
+                $size->delete();
                 return [Response::HTTP_OK, ['message' => 'This record has deleted.']];
             } else {
                 return [Response::HTTP_BAD_REQUEST, [
