@@ -6,6 +6,7 @@ use App\Services\DiscountServiceInterface;
 use App\Http\Controllers\API\BaseController;
 use App\Http\Requests\CreateDiscountRequest;
 use App\Http\Requests\UpdateDiscountRequest;
+use Illuminate\Http\Request;
 
 class DiscountController extends BaseController
 {
@@ -26,9 +27,26 @@ class DiscountController extends BaseController
      *
      * @return json
      */
-    public function index()
+    public function index(Request $request)
     {
-        list($statusCode, $data) = $this->discountService->getAllDiscounts();
+        $request->validate([
+            'page' => 'nullable|integer',
+            'per_page' => 'nullable|integer',
+            'sort_fields' => 'nullable|string|in:created_at,updated_at',
+            'sort_order' => 'nullable|string|in:desc,asc'
+        ]);
+
+        $params = $request->all();
+        $paginate = [
+            'page' => $params['page'] ?? 1,
+            'per_page' => $params['per_page'] ?? 8
+        ];
+
+        $filter = [
+            'sort_fields' => $params['sort_fields'] ?? null,
+            'sort_order' => $params['sort_order'] ?? 'ASC',
+        ];
+        list($statusCode, $data) = $this->discountService->getAllDiscounts($filter, $paginate);
 
         return $this->response($data, $statusCode);
     }

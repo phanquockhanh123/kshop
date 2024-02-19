@@ -25,11 +25,11 @@ class UpdateDiscountRequest extends FormRequest
     public function rules()
     {
         return [
-            'discount_type' => 'nullable',
-            'discount_value' => [
-                'required_if:discount_type,1',
-                new ValidateDiscountValue
-            ],
+            // 'discount_type' => 'nullable',
+            // 'discount_value' => [
+            //     'required_if:discount_type,1',
+            //     new ValidateDiscountValue
+            // ],
             'start_date' => 'required|before_or_equal:end_date',
             'end_date' => 'required|after_or_equal:start_time'
         ];

@@ -4,7 +4,7 @@ namespace App\Services;
 
 interface CampaignServiceInterface
 {
-    public function getAllCampaigns();
+    public function getAllCampaigns(array $filter,array $paginate);
 
     public function detailCampaign($id);
 

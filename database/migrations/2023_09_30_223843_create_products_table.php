@@ -20,7 +20,7 @@ class CreateProductsTable extends Migration
             $table->unsignedBigInteger('campaign_id')->nullable();
             $table->string('name');
             $table->double('price');
-            $table->string('filepath')->nullable();
+            $table->string('image')->nullable();
             $table->text('description')->nullable();
             $table->boolean('status')->default(true);
             $table->integer('priority')->default(0);

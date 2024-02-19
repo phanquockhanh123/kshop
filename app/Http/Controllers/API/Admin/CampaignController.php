@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\Admin;
 
+use Illuminate\Http\Request;
 use App\Services\CampaignServiceInterface;
 use App\Http\Controllers\API\BaseController;
 use App\Http\Requests\CreateCampaignRequest;
@@ -26,9 +27,26 @@ class CampaignController extends BaseController
      *
      * @return json
      */
-    public function index()
+    public function index(Request $request)
     {
-        list($statusCode, $data) = $this->campaignService->getAllCampaigns();
+        $request->validate([
+            'page' => 'nullable|integer',
+            'per_page' => 'nullable|integer',
+            'sort_fields' => 'nullable|string|in:created_at,updated_at',
+            'sort_order' => 'nullable|string|in:desc,asc'
+        ]);
+
+        $params = $request->all();
+        $paginate = [
+            'page' => $params['page'] ?? 1,
+            'per_page' => $params['per_page'] ?? 8
+        ];
+
+        $filter = [
+            'sort_fields' => $params['sort_fields'] ?? null,
+            'sort_order' => $params['sort_order'] ?? 'ASC',
+        ];
+        list($statusCode, $data) = $this->campaignService->getAllCampaigns($filter, $paginate);
 
         return $this->response($data, $statusCode);
     }
@@ -83,6 +101,8 @@ class CampaignController extends BaseController
     {
         $data = $request->all();
         $data['id'] = $id;
+        $data['_method'] = 'patch';
+
         list($statusCode, $data) = $this->campaignService->updateCampaign($data);
 
         return $this->response($data, $statusCode);

@@ -10,7 +10,7 @@ class Product extends BaseModel
         'campaign_id',
         'name',
         'price',
-        'filepath',
+        'image',
         'description',
         'status',
         'priority',

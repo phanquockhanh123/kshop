@@ -7,32 +7,34 @@ use App\Models\Campaign;
 use App\Jobs\DelayCreateCampainJob;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Resources\CampaignResource;
 use App\Repositories\CampaignRepository;
 use Symfony\Component\HttpFoundation\Response;
 
 class CampaignService implements CampaignServiceInterface
 {
-    protected $campaignRepository;
-
-    /**
-     * create a new instance
-     *
-     * @param CampaignRepository $campaignRepository
-     */
-    public function __construct(CampaignRepository $campaignRepository)
-    {
-        $this->campaignRepository = $campaignRepository;
-    }
 
     /**
      * get All Campaigns function
      *
      * @return array
      */
-    public function getAllCampaigns()
+    public function getAllCampaigns(array $filter,array $paginate)
     {
-        $campaigns = $this->campaignRepository->getAll();
-        return [Response::HTTP_OK, $campaigns];
+        $query = Campaign::query();
+
+        if (!empty($filter['query'])) {
+            $query = $query->whereRaw($filter['query']);
+        }
+
+        if ($filter['sort_fields']) {
+            $query = $query->orderBy($filter['sort_fields'], $filter['sort_order']);
+        }
+
+        $data = $query->orderBy('updated_at', 'DESC')
+            ->paginate($paginate['per_page'], ['*'], 'page', $paginate['page']);
+
+        return [Response::HTTP_OK, $data->toArray()];
     }
 
     /**
@@ -43,8 +45,9 @@ class CampaignService implements CampaignServiceInterface
     public function detailCampaign($campaignId)
     {
         try {
-            $campaign = $this->campaignRepository->detail($campaignId);
-            return [Response::HTTP_OK, $campaign];
+            $campaign = Campaign::findOrFail($campaignId);
+            $data = (new CampaignResource($campaign))->toArray();
+            return [Response::HTTP_OK, $data];
         } catch (Exception $e) {
             return [Response::HTTP_INTERNAL_SERVER_ERROR, ['errors' => $e]];
         }
@@ -58,8 +61,15 @@ class CampaignService implements CampaignServiceInterface
     public function deleteCampaign($campaignId)
     {
         try {
-            $this->campaignRepository->delete($campaignId);
-            return [Response::HTTP_OK, ['message' => 'Delete campaign successful!']];
+            $campaign = Campaign::find($campaignId);
+            if ($campaign) {
+                $campaign->delete();
+                return [Response::HTTP_OK, ['message' => 'This record has deleted.']];
+            } else {
+                return [Response::HTTP_BAD_REQUEST, [
+                    'message' => 'This record not found.'
+                ]];
+            }
         } catch (\Exception $e) {
             return [Response::HTTP_INTERNAL_SERVER_ERROR, ['message' => $e]];
         }
@@ -67,33 +77,23 @@ class CampaignService implements CampaignServiceInterface
     }
 
     public function createCampaign($data) {
-        // Lưu ảnh
-        if (!empty($data['filepath'])) {
-            $profile = $data['filepath'];
-            $filename = time() . '_' . $profile->getClientOriginalName();
+        $dataSave = $data;
 
-            $uploadPath = public_path('/assests/img/campaigns') ;
-
-            // Kiểm tra xem thư mục đã tồn tại chưa, nếu không thì tạo mới
-            if (!File::exists($uploadPath)) {
-                File::makeDirectory($uploadPath, 0777, true, true);
-            }
-
-            if (move_uploaded_file($profile, $uploadPath . '/' . $filename)) {
-                $data['filepath'] = $uploadPath . '/' . $filename;
-                $data['photo_name'] = $filename;
-            } else {
-                return [Response::HTTP_INTERNAL_SERVER_ERROR, ['message' => 'Upload file local fail!']];
-            }
+        if (!empty($data['image'])) {
+            $image = uploadImage($data['image'], '/img/campaigns');
+           
+            $dataSave['image'] = $image;
         }
 
         try {
-            DelayCreateCampainJob::dispatch()->delay(now()->addMinutes(1));
-            $this->campaignRepository->create($data);
-            return [Response::HTTP_OK, ['message' => 'Create campaign successful!']];
+            $dataSave['status'] = Campaign::STATUS_ACTIVE;
+            Campaign::create($dataSave);
+            return [Response::HTTP_OK, ['message' => 'Campaign created successfully.']];
         } catch (\Exception $e) {
-            return [Response::HTTP_INTERNAL_SERVER_ERROR, ['message' => $e]];
+            return [Response::HTTP_INTERNAL_SERVER_ERROR, $e];
         }
+
+        return [Response::HTTP_OK, []];
     }
 
     /**
@@ -103,37 +103,23 @@ class CampaignService implements CampaignServiceInterface
      */
     public function updateCampaign($data)
     {
-        $campaign = Campaign::where('id', $data['id'])->first();
-        // Lưu ảnh
-        if (!empty($data['filepath'])) {
+        $campaign = Campaign::findOrFail($data['id']);
+        $dataSave = $data;
 
-            $profile = $data['filepath'];
-            $filename = time() . '_' . $profile->getClientOriginalName();
-
-            $uploadPath = public_path('/assests/img/campaigns') ;
-            $imagePath = $uploadPath . '/' . $filename;
-            // Kiểm tra xem thư mục đã tồn tại chưa, nếu không thì tạo mới
-            if (!File::exists($uploadPath)) {
-                File::makeDirectory($uploadPath, 0777, true, true);
-            }
-
-            if ($campaign->filepath) {
-                unlink($campaign->filepath);
-            }
-
-            if (move_uploaded_file($profile, $imagePath)) {
-                $data['filepath'] = $imagePath;
-                $data['photo_name'] = $filename;
-            } else {
-                return [Response::HTTP_INTERNAL_SERVER_ERROR, ['message' => 'Upload file local fail!']];
-            }
+        if (!empty($data['image'])) {
+            deleteImageLocalStorage($campaign->image);
+            $image = uploadImage($data['image'], '/img/campaigns');
+           
+            $dataSave['image'] = $image;
         }
 
         try {
-            $this->campaignRepository->edit($data);
-            return [Response::HTTP_OK, ['message' => 'Update discount successful!']];
+            $campaign->update($dataSave);
+            return [Response::HTTP_OK, ['message' => 'Campaign updated successfully.']];
         } catch (\Exception $e) {
             return [Response::HTTP_INTERNAL_SERVER_ERROR, $e];
         }
+
+        return [Response::HTTP_OK, []];
     }
 }

@@ -51,5 +51,5 @@ Route::prefix('admin')->group(function () {
     Route::get('/campaigns/{id}', [Admin\CampaignController::class, 'detail'])->where('id', '[0-9]+')->name('admin.detail-campaigns');
     Route::delete('/campaigns/{id}', [Admin\CampaignController::class, 'deleteCampaign'])->where('id', '[0-9]+')->name('admin.delete-campaigns');
     Route::post('/campaigns', [Admin\CampaignController::class, 'create'])->name('admin.create-campaigns');
-    Route::patch('/campaigns/{id}', [Admin\CampaignController::class, 'update'])->where('id', '[0-9]+')->name('admin.update-campaigns');
+    Route::post('/campaigns/{id}', [Admin\CampaignController::class, 'update'])->where('id', '[0-9]+')->name('admin.update-campaigns');
 });

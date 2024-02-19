@@ -28,11 +28,11 @@ class CreateDiscountRequest extends FormRequest
 
         return [
             //'discount_type' => 'required|in: ' . implode(',', array_values(Discount::$discountType)),
-            'discount_type' => 'required',
-            'discount_value' => [
-                'required',
-                new ValidateDiscountValue
-            ],
+            // 'discount_type' => 'required',
+            // 'discount_value' => [
+            //     'required',
+            //     new ValidateDiscountValue
+            // ],
             'start_date' => 'required|before_or_equal:end_date',
             'end_date' => 'nullable|after_or_equal:start_time'
         ];

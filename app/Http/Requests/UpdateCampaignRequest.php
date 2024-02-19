@@ -27,8 +27,7 @@ class UpdateCampaignRequest extends FormRequest
         return [
             'name' => 'nullable',
             'status' => 'nullable',
-            'filepath' => 'nullable',
-            'photo_name' => 'nullable',
+            'image' => 'nullable',
             'start_date' => 'nullable|before_or_equal:end_date',
             'end_date' => 'nullable|after_or_equal:start_time',
             'campaign_budget' => 'nullable|integer',
