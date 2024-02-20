@@ -15,7 +15,8 @@ class Category extends BaseModel
 
     protected $fillable = [
         'name',
-        'status'
+        'status',
+        'image'
     ];
 
     protected $dates = [
