@@ -4,7 +4,7 @@ namespace App\Services;
 
 interface DiscountServiceInterface
 {
-    public function getAllDiscounts();
+    public function getAllDiscounts(array $filter, array $paginate);
 
     public function detailDiscount($id);
 

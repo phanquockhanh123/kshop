@@ -20,8 +20,7 @@ class Campaign extends BaseModel
 
     protected $fillable = [
         'name',
-        'filepath',
-        'photo_name',
+        'image',
         'start_date',
         'end_date',
         'status',

@@ -25,8 +25,7 @@ class CreateCampaignRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'filepath' => 'nullable',
-            'photo_name' => 'nullable',
+            'image' => 'nullable',
             'start_date' => 'required|before_or_equal:end_date',
             'end_date' => 'nullable|after_or_equal:start_time',
             'campaign_budget' => 'required|integer',

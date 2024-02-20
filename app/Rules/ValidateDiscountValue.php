@@ -25,9 +25,9 @@ class ValidateDiscountValue implements Rule
      */
     public function passes($attribute, $value)
     {
-        $discountType = $_REQUEST['discount_type'];
+        // $discountType = $_REQUEST['discount_type'];
 
-        return $discountType === '%' && $value > 0 && $value < 100;
+        // return $discountType === '%' && $value > 0 && $value < 100;
     }
 
     /**
@@ -37,6 +37,6 @@ class ValidateDiscountValue implements Rule
      */
     public function message()
     {
-        return 'Giá trị giảm giá nằm trong khoảng 0 đến 100%.';
+        return true;
     }
 }
