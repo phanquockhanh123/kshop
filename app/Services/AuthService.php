@@ -100,6 +100,7 @@ class AuthService implements AuthServiceInterface
     public function changePassword($request)
     {
         $admin = auth()->user();
+
         try {
             if (!$admin->first_login_flag) {
                 $admin->update([
@@ -121,7 +122,7 @@ class AuthService implements AuthServiceInterface
                 ]
             ];
         }
-        return [Response::HTTP_NO_CONTENT, []];
+        return [Response::HTTP_OK, []];
     }
 
     /**
@@ -222,11 +223,10 @@ class AuthService implements AuthServiceInterface
             Mail::queue(new MailResetPassword($passwordReset));
         } catch (\Exception $error) {
             \Log::error($error);
-            dd($error);
             return [Response::HTTP_INTERNAL_SERVER_ERROR, ['message' => trans('messages.MsgErr006')]];
         }
 
-        return [Response::HTTP_NO_CONTENT, []];
+        return [Response::HTTP_OK, []];
     }
 
     /**

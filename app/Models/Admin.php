@@ -11,8 +11,6 @@ class Admin extends BaseModel implements Authenticatable
     use HasApiTokens;
     use AuthenticatableContract;
 
-    
-
     // gender
     public const GENDER_MALE = 0;
     public const GENDER_FEMALE = 1;
