@@ -32,7 +32,7 @@ class MailResetPassword extends Mailable
     {
         $resetPasswordUrl = env('FE_URL') . 'reset-password?token=' . $this->passwordReset->token;
         return $this->to($this->passwordReset->email)
-            ->subject('[MonstarGate] Đặt lại mật khẩu')
+            ->subject('[KSHOP] Đặt lại mật khẩu')
             ->view('emails.forgot_password_mail')
             ->with(['resetPasswordUrl' => $resetPasswordUrl]);
     }

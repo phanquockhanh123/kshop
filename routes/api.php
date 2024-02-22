@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\Admin;
+use App\Http\Controllers\API\AuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,22 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::prefix('admin')->group(function () {
+    Route::post('/login', [AuthController::class, 'login'])->name('admin.login');
+    Route::patch('/reset_password', [AuthController::class, 'resetPassword'])->name('admin.reset-password');
+    Route::post('/forgot_password', [AuthController::class, 'forgotPassword'])->name('admin.forgot-password');
+});
+
+Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
+    Route::patch('/change_password', [AuthController::class, 'changePasswordFirstLogin'])->name('admin.change-password-first-login');
+    Route::delete('/logout', [AuthController::class, 'logout'])->name('admin.logout');
+    Route::delete('/confirm_token_reset_password', [AuthController::class, 'confirmResetPasswordToken'])->name('admin.confirm-token-reset-password');
+});
+
+Route::prefix('admin')->group(function () {
+    Route::post('/create_store_infos', [Admin\StoreInfoController::class, 'create'])->name('admin.create-store-infos');
+    Route::patch('/update_store_infos', [Admin\StoreInfoController::class, 'update'])->name('admin.update-store-infos');
+});
 
 Route::prefix('admin')->group(function () {
     Route::get('/categories', [Admin\CategoryController::class, 'index'])->name('admin.index-categories');

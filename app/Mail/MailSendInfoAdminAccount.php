@@ -33,7 +33,7 @@ class MailSendInfoAdminAccount extends Mailable
     public function build()
     {
         return $this->to($this->emailAddress)
-            ->subject('[MonstarGate] Thông tin tài khoản')
+            ->subject('[KSHOP] Thông tin tài khoản')
             ->view('emails.info_admin_account_mail')
             ->with(['emailAddress' => $this->emailAddress]);
     }
