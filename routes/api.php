@@ -70,3 +70,11 @@ Route::prefix('admin')->group(function () {
     Route::post('/campaigns', [Admin\CampaignController::class, 'create'])->name('admin.create-campaigns');
     Route::post('/campaigns/{id}', [Admin\CampaignController::class, 'update'])->where('id', '[0-9]+')->name('admin.update-campaigns');
 });
+
+Route::prefix('admin')->group(function () {
+    Route::get('/products', [Admin\ProductController::class, 'index'])->name('admin.list-products');
+    Route::get('/products/{id}', [Admin\ProductController::class, 'detail'])->where('id', '[0-9]+')->name('admin.detail-products');
+    Route::delete('/products/{id}', [Admin\ProductController::class, 'deleteProduct'])->where('id', '[0-9]+')->name('admin.delete-products');
+    Route::post('/products', [Admin\ProductController::class, 'create'])->name('admin.create-products');
+    Route::post('/products/{id}', [Admin\ProductController::class, 'update'])->where('id', '[0-9]+')->name('admin.update-products');
+});

@@ -18,6 +18,7 @@ class CreateProductInfosTable extends Migration
             $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('size_id');
             $table->unsignedBigInteger('color_id');
+            $table->double('price');
             $table->integer('quantity');
             $table->timestamps();
             $table->softDeletes();
