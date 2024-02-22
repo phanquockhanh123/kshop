@@ -255,6 +255,6 @@ class AuthService implements AuthServiceInterface
                 ]
             ];
         }
-        return [Response::HTTP_NO_CONTENT, []];
+        return [Response::HTTP_OK, []];
     }
 }
