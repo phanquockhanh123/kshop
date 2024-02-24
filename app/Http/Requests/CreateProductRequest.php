@@ -33,8 +33,12 @@ class CreateProductRequest extends FormRequest
             'priority' => 'required|integer',
             'size_id' => 'required|integer|exists:sizes,id,deleted_at,NULL',
             'color_id' => 'nullable|integer|exists:colors,id,deleted_at,NULL',
-            'price' => 'required|integer',
-            
+            'price' => 'required|integer|lt:price_compare',
+            'price_compare' => 'required|integer|gt:price',
+            'price_more' => 'required|integer',
+            'weight' => 'required|integer',
+            'is_ship' => 'required|integer',
+            'quantity' => 'required|integer'
         ];
     }
 }

@@ -9,7 +9,9 @@ class ProductInfos extends BaseModel
         'size_id',
         'color_id',
         'quantity',
-        'price',
+        'price_more',
+        'quantity_avail',
+        'quantity'
     ];
 
     protected $dates = [

@@ -22,6 +22,14 @@ class Product extends BaseModel
         'description',
         'status',
         'priority',
+        'sku',
+        'barcode',
+        'supplier',
+        'tags',
+        'price',
+        'price_compare',
+        'is_ship',
+        'weight'
     ];
 
     protected $dates = [
@@ -53,4 +61,13 @@ class Product extends BaseModel
     {
         return $this->belongsTo(Discount::class);
     }
+
+    public static function next()
+    {
+        return static::max('id') + 1;
+    }
+
+    protected $casts = [
+        'image' => 'array'
+    ];
 }

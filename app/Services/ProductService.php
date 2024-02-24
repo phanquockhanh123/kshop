@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Product;
+use Illuminate\Support\Str;
 use App\Models\ProductInfos;
 use App\Http\Resources\ProductResource;
 use Symfony\Component\HttpFoundation\Response;
@@ -75,17 +76,41 @@ class ProductService implements ProductServiceInterface
 
     public function createProduct($data)
     {
-        $dataSave = $data;
+        $nextAutoIncrement = Product::next();
+
+        $tags = Str::slug($data['name']) . '-' . $nextAutoIncrement;
+        $sku = str_replace(' ', '', $data['name']) . '-' . Str::uuid(time());
+
+        $dataProduct = [
+            'category_id' => $data['category_id'],
+            'name' => $data['name'],
+            'image' => [],
+            'sku' => $sku,
+            'tags' => $tags,
+            'description' => $data['description'] ?? '',
+            'priority' => $data['priority'],
+            'supplier' => $data['supplier'],
+            'price' => $data['price'],
+            'price_compare' => $data['price_compare'],
+            'is_ship' => $data['is_ship'],
+            'weight' => $data['weight']
+        ];
+
+        $dataProductInfos = [
+            'color_id' => $data['color_id'],
+            'price_more' => $data['price_more'],
+            'size_id' => $data['size_id'],
+            'quantity' => $data['quantity'],
+            'quantity_avail' => $data['quantity_avail'] ?? 0,
+        ];
 
         if (!empty($data['image'])) {
-            $image = uploadImage($data['image'], '/img/products');
-
-            $dataSave['image'] = $image;
+            foreach ($data['image'] as $image) {
+                $dataProduct = uploadManyImage($image, '/img/products', $dataProduct);
+            }
         }
 
         try {
-            $productDB = Product::where('name', $dataSave['name'])->first();
-
             $dataSave['status'] = Product::STATUS_ACTIVE;
             if (!empty($data['campaign_id'])) {
                 $dataProduct['campaign_id'] = $dataSave['campaign_id'];
@@ -94,28 +119,9 @@ class ProductService implements ProductServiceInterface
             if (!empty($data['discount_id'])) {
                 $dataProduct['discount_id'] = $dataSave['discount_id'];
             }
-            $dataProduct = [
-                'category_id' => $dataSave['category_id'],
-                'name' => $dataSave['name'],
-                'image' => $dataSave['image'],
-                'description' => $dataSave['description'] ?? '',
-                'status' => $dataSave['status'],
-                'priority' => $dataSave['priority'],
-            ];
 
-            $dataProductInfos = [
-                'color_id' => $dataSave['color_id'],
-                'price' => $dataSave['price'],
-                'size_id' => $dataSave['size_id'],
-                'quantity' => $dataSave['quantity'],
-            ];
-
-            if (empty($productDB)) {
-                $product = Product::create($dataProduct);
-                $dataProductInfos['product_id'] = $product->id;
-            } else {
-                $dataProductInfos['product_id'] = $productDB->id;
-            }
+            $product = Product::create($dataProduct);
+            $dataProductInfos['product_id'] = $product->id;
 
             ProductInfos::create($dataProductInfos);
             return [Response::HTTP_OK, ['message' => 'Product created successfully.']];

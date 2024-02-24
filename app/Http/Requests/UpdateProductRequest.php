@@ -34,6 +34,7 @@ class UpdateProductRequest extends FormRequest
             'size_id' => 'nullable|integer|exists:sizes,id,deleted_at,NULL',
             'color_id' => 'nullable|integer|exists:colors,id,deleted_at,NULL',
             'price' => 'nullable|integer',
+            'price_compare' => 'nullable|integer',
         ];
     }
 }

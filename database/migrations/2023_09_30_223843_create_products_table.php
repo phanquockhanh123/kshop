@@ -18,8 +18,16 @@ class CreateProductsTable extends Migration
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('discount_id')->nullable();
             $table->unsignedBigInteger('campaign_id')->nullable();
+            $table->string('sku')->unique();
+            $table->string('barcode')->nullable();
             $table->string('name');
-            $table->string('image')->nullable();
+            $table->string('supplier');
+            $table->string('tags');
+            $table->double('price');
+            $table->double('price_compare');
+            $table->boolean('is_ship')->default(true);
+            $table->float('weight');
+            $table->text('image')->nullable();
             $table->text('description')->nullable();
             $table->boolean('status')->default(true);
             $table->integer('priority')->default(0);
