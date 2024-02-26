@@ -24,17 +24,23 @@ class UpdateProductRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'nullable',
-            'category_id' => 'nullable|integer|exists:categories,id,deleted_at,NULL',
+            'name' => 'nullable|string',
+            'category_id' => 'required|integer|exists:categories,id,deleted_at,NULL',
             'campaign_id' => 'nullable|integer|exists:campaigns,id,deleted_at,NULL',
             'discount_id' => 'nullable|integer|exists:discounts,id,deleted_at,NULL',
             'image' => 'nullable',
-            'description' => 'nullable',
-            'priority' => 'nullable|integer',
-            'size_id' => 'nullable|integer|exists:sizes,id,deleted_at,NULL',
-            'color_id' => 'nullable|integer|exists:colors,id,deleted_at,NULL',
-            'price' => 'nullable|integer',
-            'price_compare' => 'nullable|integer',
+            'description' => 'required',
+            'priority' => 'required|integer',
+            'price' => 'required|integer|lt:price_compare',
+            'price_compare' => 'required|integer|gt:price',
+            'weight' => 'required|integer',
+            'is_ship' => 'required|integer',
+            'price_more' => 'required|integer',
+            'size_id' => 'required|array',
+            'size_id.*' => 'required|integer|exists:sizes,id,deleted_at,NULL',
+            'color_id' => 'required|array',
+            'color_id.*' => 'required|integer|exists:colors,id,deleted_at,NULL',
+            'quantity' => 'required|integer'
         ];
     }
 }

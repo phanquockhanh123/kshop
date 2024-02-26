@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Product;
 use Illuminate\Support\Str;
 use App\Models\ProductInfos;
+use Illuminate\Support\Facades\DB;
 use App\Http\Resources\ProductResource;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -18,7 +19,7 @@ class ProductService implements ProductServiceInterface
      */
     public function getAllProducts(array $filter, array $paginate)
     {
-        $query = Product::query();
+        $query = Product::with('productInfos');
 
         if (!empty($filter['query'])) {
             $query = $query->whereRaw($filter['query']);
@@ -42,7 +43,7 @@ class ProductService implements ProductServiceInterface
     public function detailProduct($ProductId)
     {
         try {
-            $Product = Product::findOrFail($ProductId);
+            $Product = Product::with('productInfos')->findOrFail($ProductId);
             $data = (new ProductResource($Product))->toArray();
             return [Response::HTTP_OK, $data];
         } catch (\Exception $e) {
@@ -59,17 +60,20 @@ class ProductService implements ProductServiceInterface
     {
         try {
             $product = Product::with('productInfos')->find($productId);
-
+            DB::beginTransaction();
             if ($product) {
                 $product->delete();
-                $product->productInfos->delete();
+                ProductInfos::where('product_id', $product->id)->delete();
+                DB::commit();
                 return [Response::HTTP_OK, ['message' => 'This record has deleted.']];
             } else {
+                DB::rollBack();
                 return [Response::HTTP_BAD_REQUEST, [
                     'message' => 'This record not found.'
                 ]];
             }
         } catch (\Exception $e) {
+            dd($e);
             return [Response::HTTP_INTERNAL_SERVER_ERROR, ['message' => $e]];
         }
     }
@@ -79,13 +83,11 @@ class ProductService implements ProductServiceInterface
         $nextAutoIncrement = Product::next();
 
         $tags = Str::slug($data['name']) . '-' . $nextAutoIncrement;
-        $sku = str_replace(' ', '', $data['name']) . '-' . Str::uuid(time());
 
         $dataProduct = [
             'category_id' => $data['category_id'],
             'name' => $data['name'],
             'image' => [],
-            'sku' => $sku,
             'tags' => $tags,
             'description' => $data['description'] ?? '',
             'priority' => $data['priority'],
@@ -96,20 +98,12 @@ class ProductService implements ProductServiceInterface
             'weight' => $data['weight']
         ];
 
-        $dataProductInfos = [
-            'color_id' => $data['color_id'],
-            'price_more' => $data['price_more'],
-            'size_id' => $data['size_id'],
-            'quantity' => $data['quantity'],
-            'quantity_avail' => $data['quantity_avail'] ?? 0,
-        ];
-
         if (!empty($data['image'])) {
             foreach ($data['image'] as $image) {
                 $dataProduct = uploadManyImage($image, '/img/products', $dataProduct);
             }
         }
-
+        DB::beginTransaction();
         try {
             $dataSave['status'] = Product::STATUS_ACTIVE;
             if (!empty($data['campaign_id'])) {
@@ -119,13 +113,31 @@ class ProductService implements ProductServiceInterface
             if (!empty($data['discount_id'])) {
                 $dataProduct['discount_id'] = $dataSave['discount_id'];
             }
-
             $product = Product::create($dataProduct);
-            $dataProductInfos['product_id'] = $product->id;
 
-            ProductInfos::create($dataProductInfos);
+            foreach ($data['size_id'] as $sizeId) {
+                foreach ($data['color_id'] as $colorId) {
+                    $dataProductInfos[] = [
+                        'price_more' => $data['price_more'],
+                        'quantity' => $data['quantity'],
+                        'quantity_avail' => $data['quantity_avail'] ?? 0,
+                        'size_id' => $sizeId,
+                        'color_id' => $colorId,
+                        'product_id' => $product->id,
+                        'sku' => str_replace(' ', '', $data['name']) . '-' . Str::uuid(time())
+                    ];
+                }
+            }
+
+            foreach ($dataProductInfos as $dataProductInfo) {
+                ProductInfos::create($dataProductInfo);
+            }
+            DB::commit();
             return [Response::HTTP_OK, ['message' => 'Product created successfully.']];
+           
         } catch (\Exception $e) {
+            dd($e);
+            DB::rollback();
             return [Response::HTTP_INTERNAL_SERVER_ERROR, $e];
         }
 
@@ -133,13 +145,65 @@ class ProductService implements ProductServiceInterface
     }
 
     /**
-     * update Product
+     * update product
      * @param  $data
      * @return array
      */
     public function updateProduct($data)
     {
+        $product = Product::findOrFail($data['id']);
+        $dataSave = $data;
+        $dataSave['image'] = $product->image;
+
+        if (!empty($data['image'])) {
+            foreach ($data['remove_images'] ?? [] as $image) {
+                deleteImageLocalStorage($image);
+            }
+
+            foreach ($data['image'] as $image) {
+                $dataSave = uploadManyImage($image, '/img/products', $dataSave);
+            }
+
+            foreach ($dataSave['image'] as $key => $image) {
+                if (in_array($image, $data['remove_images'] ?? [])) {
+                    unset($dataSave['image'][$key]);
+                }
+            }
+            $dataSave['image'] = array_values($dataSave['image']);
+        }
+
+        DB::beginTransaction();
+        try {
+            $product->update($dataSave);
+            ProductInfos::where('product_id', $product->id)->forceDelete();
+
+            foreach ($data['size_id'] as $sizeId) {
+                foreach ($data['color_id'] as $colorId) {
+                    $dataProductInfos[] = [
+                        'size_id' => $sizeId,
+                        'color_id' => $colorId,
+                        'price_more' => $data['price_more'],
+                        'quantity' => $data['quantity'],
+                        'product_id' => $product->id,
+                        'sku' => str_replace(' ', '', $data['name']) . '-' . Str::uuid(time())
+                    ];
+                }
+            }
+
+            foreach ($dataProductInfos as $dataProductInfo) {
+                ProductInfos::create($dataProductInfo);
+            }
+            DB::commit();
+            return [Response::HTTP_OK, ['message' => 'Product updated successfully.']];
+           
+        } catch (\Exception $e) {
+            DB::rollback();
+            return [Response::HTTP_INTERNAL_SERVER_ERROR, $e];
+        }
 
         return [Response::HTTP_OK, []];
     }
+
+
+
 }

@@ -22,8 +22,6 @@ class Product extends BaseModel
         'description',
         'status',
         'priority',
-        'sku',
-        'barcode',
         'supplier',
         'tags',
         'price',
