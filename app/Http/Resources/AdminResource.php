@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class AdminResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -25,6 +25,7 @@ class UserResource extends JsonResource
             'status' => $this->status,
             'telephone' => $this->telephone,
             'role' => $this->role,
+            'image' => $this->image,
             'first_login_flag' => $this->first_login_flag,
             'created_at' => Carbon::parse( $this->created_at)->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::parse( $this->updated_at)->format('Y-m-d H:i:s'),

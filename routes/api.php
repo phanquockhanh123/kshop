@@ -21,11 +21,11 @@ Route::prefix('admin')->group(function () {
 });
 
 Route::prefix('admin')->group(function () {
-    Route::get('/users', [Admin\UserController::class, 'index'])->name('admin.list-users');
-    Route::get('/users/{id}', [Admin\UserController::class, 'detail'])->where('id', '[0-9]+')->name('admin.detail-users');
-    Route::delete('/users/{id}', [Admin\UserController::class, 'delete'])->where('id', '[0-9]+')->name('admin.delete-users');
-    Route::post('/users', [Admin\UserController::class, 'create'])->name('admin.create-users');
-    Route::post('/users/{id}', [Admin\UserController::class, 'update'])->where('id', '[0-9]+')->name('admin.update-users');
+    Route::get('/admins', [Admin\AdminController::class, 'index'])->name('admin.list-admins');
+    Route::get('/admins/{id}', [Admin\AdminController::class, 'detail'])->where('id', '[0-9]+')->name('admin.detail-admins');
+    Route::delete('/admins/{id}', [Admin\AdminController::class, 'delete'])->where('id', '[0-9]+')->name('admin.delete-admins');
+    Route::post('/admins', [Admin\AdminController::class, 'create'])->name('admin.create-admins');
+    Route::post('/admins/{id}', [Admin\AdminController::class, 'update'])->where('id', '[0-9]+')->name('admin.update-admins');
 });
 
 Route::prefix('admin')->middleware('auth:sanctum')->group(function () {

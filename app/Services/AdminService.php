@@ -3,26 +3,22 @@
 namespace App\Services;
 
 use Exception;
-use App\Models\User;
 use App\Models\Admin;
 use Illuminate\Support\Facades\DB;
-use App\Jobs\DelayCreateCampainJob;
-use App\Http\Resources\UserResource;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
+use App\Http\Resources\AdminResource;
 use Symfony\Component\HttpFoundation\Response;
 
-class UserService implements UserServiceInterface
+class AdminService implements AdminServiceInterface
 {
 
     /**
-     * get All Users function
+     * get All Admins function
      *
      * @return array
      */
-    public function getAllUsers(array $filter,array $paginate)
+    public function getAllAdmins(array $filter,array $paginate)
     {
-        $query = User::query();
+        $query = Admin::query();
 
         if (!empty($filter['query'])) {
             $query = $query->whereRaw($filter['query']);
@@ -39,15 +35,15 @@ class UserService implements UserServiceInterface
     }
 
     /**
-     * get detail User function
+     * get detail Admin function
      *
      * @return array
      */
-    public function detailUser($UserId)
+    public function detailAdmin($AdminId)
     {
         try {
-            $User = User::findOrFail($UserId);
-            $data = (new UserResource($User))->toArray();
+            $Admin = Admin::findOrFail($AdminId);
+            $data = (new AdminResource($Admin))->toArray();
             return [Response::HTTP_OK, $data];
         } catch (Exception $e) {
             return [Response::HTTP_INTERNAL_SERVER_ERROR, ['errors' => $e]];
@@ -55,16 +51,16 @@ class UserService implements UserServiceInterface
     }
 
     /**
-     * delete User function
+     * delete Admin function
      *
      * @return array
      */
-    public function deleteUser($UserId)
+    public function deleteAdmin($adminId)
     {
         try {
-            $User = User::find($UserId);
-            if ($User) {
-                $User->delete();
+            $admin = Admin::find($adminId);
+            if ($admin) {
+                $admin->delete();
                 return [Response::HTTP_OK, ['message' => 'This record has deleted.']];
             } else {
                 return [Response::HTTP_BAD_REQUEST, [
@@ -77,11 +73,11 @@ class UserService implements UserServiceInterface
 
     }
 
-    public function createUser($data) {
+    public function createAdmin($data) {
         $dataSave = $data;
 
         if (!empty($data['image'])) {
-            $image = uploadImage($data['image'], '/img/users');
+            $image = uploadImage($data['image'], '/img/Admins');
            
             $dataSave['image'] = $image;
         }
@@ -92,7 +88,7 @@ class UserService implements UserServiceInterface
 
             Admin::create($dataSave);
             DB::commit();
-            return [Response::HTTP_OK, ['message' => 'User created successfully.']];
+            return [Response::HTTP_OK, ['message' => 'Admin created successfully.']];
         } catch (\Exception $e) {
             DB::rollback();
             return [Response::HTTP_INTERNAL_SERVER_ERROR, $e];
@@ -102,26 +98,26 @@ class UserService implements UserServiceInterface
     }
 
     /**
-     * update user
+     * update Admin
      * @param  $data
      * @return array
      */
-    public function updateUser($data)
+    public function updateAdmin($data)
     {
-        $user = Admin::findOrFail($data['id']);
+        $Admin = Admin::findOrFail($data['id']);
         $dataSave = $data;
 
         if (!empty($data['image'])) {
-            deleteImageLocalStorage($user->image);
-            $image = uploadImage($data['image'], '/img/users');
+            deleteImageLocalStorage($Admin->image);
+            $image = uploadImage($data['image'], '/img/Admins');
 
             $dataSave['image'] = $image;
         }
         DB::beginTransaction();
         try {
-            $user->update($dataSave);
+            $Admin->update($dataSave);
             DB::commit();
-            return [Response::HTTP_OK, ['message' => 'User updated successfully.']];
+            return [Response::HTTP_OK, ['message' => 'Admin updated successfully.']];
         } catch (\Exception $e) {
             DB::rollBack();
             return [Response::HTTP_INTERNAL_SERVER_ERROR, $e];
