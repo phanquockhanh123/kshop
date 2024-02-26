@@ -18,7 +18,11 @@ class CreateProductInfosTable extends Migration
             $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('size_id');
             $table->unsignedBigInteger('color_id');
+            $table->string('sku')->unique();
+            $table->string('barcode')->nullable();
+            $table->double('price_more');
             $table->integer('quantity');
+            $table->integer('quantity_avail')->default(0);
             $table->timestamps();
             $table->softDeletes();
 

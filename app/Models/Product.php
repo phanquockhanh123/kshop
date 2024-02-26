@@ -4,16 +4,30 @@ namespace App\Models;
 
 class Product extends BaseModel
 {
+    // status
+    public const STATUS_ACTIVE = 1;
+    public const STATUS_DISACTIVE = 0;
+
+    public static $statuses = [
+        self::STATUS_ACTIVE => 'Đang hoạt động',
+        self::STATUS_DISACTIVE => 'Không hoạt động'
+    ];
+
     protected $fillable = [
         'category_id',
         'discount_id',
         'campaign_id',
         'name',
-        'price',
         'image',
         'description',
         'status',
         'priority',
+        'supplier',
+        'tags',
+        'price',
+        'price_compare',
+        'is_ship',
+        'weight'
     ];
 
     protected $dates = [
@@ -21,6 +35,14 @@ class Product extends BaseModel
         'updated_at',
         'deleted_at',
     ];
+
+    /**
+     * Get the productInfos that owns the product.
+     */
+    public function productInfos()
+    {
+        return $this->hasMany(ProductInfos::class);
+    }
 
     /**
      * Get the categories that owns the product.
@@ -37,4 +59,13 @@ class Product extends BaseModel
     {
         return $this->belongsTo(Discount::class);
     }
+
+    public static function next()
+    {
+        return static::max('id') + 1;
+    }
+
+    protected $casts = [
+        'image' => 'array'
+    ];
 }
