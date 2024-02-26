@@ -20,6 +20,7 @@ class CreateAdminsTable extends Migration
             $table->tinyInteger('gender')->nullable();
             $table->date('date_of_birth')->nullable();
             $table->string('email_address')->unique();
+            $table->string('image')->nullable();
             $table->string('telephone', 10)->nullable();
             $table->string('password')
                 ->default('$2y$10$FoBBT6brPzjximfpWtC7LedZ4vu9hzFlN0xH6pYMn48iagXUdWSoy'); // Aa@123456
