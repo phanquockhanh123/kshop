@@ -48,6 +48,7 @@ class Admin extends BaseModel implements Authenticatable
         'first_login_flag',
         'refresh_token',
         'refresh_token_expired_at',
+        'image'
     ];
 
     /**

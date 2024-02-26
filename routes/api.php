@@ -20,6 +20,14 @@ Route::prefix('admin')->group(function () {
     Route::post('/forgot_password', [AuthController::class, 'forgotPassword'])->name('admin.forgot-password');
 });
 
+Route::prefix('admin')->group(function () {
+    Route::get('/users', [Admin\UserController::class, 'index'])->name('admin.list-users');
+    Route::get('/users/{id}', [Admin\UserController::class, 'detail'])->where('id', '[0-9]+')->name('admin.detail-users');
+    Route::delete('/users/{id}', [Admin\UserController::class, 'delete'])->where('id', '[0-9]+')->name('admin.delete-users');
+    Route::post('/users', [Admin\UserController::class, 'create'])->name('admin.create-users');
+    Route::post('/users/{id}', [Admin\UserController::class, 'update'])->where('id', '[0-9]+')->name('admin.update-users');
+});
+
 Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
     Route::patch('/change_password', [AuthController::class, 'changePasswordFirstLogin'])->name('admin.change-password-first-login');
     Route::delete('/logout', [AuthController::class, 'logout'])->name('admin.logout');

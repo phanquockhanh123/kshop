@@ -18,25 +18,25 @@ class User extends Authenticatable
     use Notifiable;
     use TwoFactorAuthenticatable;
 
+    // status
+    public const STATUS_ACTIVE = 1;
+    public const STATUS_DISACTIVE = 0;
+
+    public static $statuses = [
+        self::STATUS_ACTIVE => 'Đang hoạt động',
+        self::STATUS_DISACTIVE => 'Không hoạt động'
+    ];
+
     // role
-    public const ROLE_MEMBER = 0;
-    public const ROLE_PATIENT = 1;
-    public const ROLE_CASE_HANDLER = 2;
-    public const ROLE_RECEPTIONIST = 3;
-    public const ROLE_PHARMACIST = 4;
-    public const ROLE_NURSE = 5;
-    public const ROLE_DOCTOR = 6;
-    public const ROLE_ADMIN_ROOT = 7;
+    public const ROLE_MEMBER = 0; // customer
+    public const ROLE_SELLER = 1; // seller
+    public const ROLE_ADMIN = 2; // admin
+    
 
     public static $roles = [
-        self::ROLE_MEMBER => 'Member',
-        self::ROLE_PATIENT => 'Patient',
-        self::ROLE_CASE_HANDLER => 'Case Handler',
-        self::ROLE_RECEPTIONIST => 'Receptionist',
-        self::ROLE_PHARMACIST => 'Pharmacist',
-        self::ROLE_NURSE => 'Admin nurse',
-        self::ROLE_DOCTOR => 'Admin doctor',
-        self::ROLE_ADMIN_ROOT => 'Admin root',
+        self::ROLE_MEMBER => 'member',
+        self::ROLE_ADMIN => 'admin',
+        self::ROLE_SELLER => 'seller',
     ];
 
     /**
