@@ -33,4 +33,6 @@ Route::prefix('admin')->group(function () {
     });
 });
 
+Route::post('/save-json', [API\FabbiController::class, 'saveJson'])->name('save_json');
+
 
